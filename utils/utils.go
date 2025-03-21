@@ -94,7 +94,15 @@ func ScheduleBlockedIPsUpdate() {
 }
 
 func UpdateBlockedIPs() {
-	cmd := exec.Command("ufw", "status")
+	var cmd *exec.Cmd
+	if config.BlockMode == "iptables" {
+		cmd = exec.Command("iptables", "-L", "INPUT", "-s")
+	} else if config.BlockMode == "ipset" {
+		cmd = exec.Command("ipset", "list", "tblocker")
+	} else {
+		cmd = exec.Command("ufw", "status")
+	}
+
 	output, err := cmd.Output()
 	if err != nil {
 		log.Printf("Error checking ufw status: %v", err)
@@ -154,6 +162,8 @@ func BlockIP(ip string) {
 
 	if config.BlockMode == "iptables" {
 		cmd = exec.Command("iptables", "-I", "INPUT", "-s", ip, "-j", "DROP")
+	} else if config.BlockMode == "ipset" {
+		cmd = exec.Command("ipset", "add", "tblocker", ip)
 	} else {
 		cmd = exec.Command("ufw", "insert", "1", "deny", "from", ip, "to", "any")
 	}
@@ -177,6 +187,8 @@ func UnblockIPAfterDelay(ip string, delay time.Duration, username string) {
 
 	if config.BlockMode == "iptables" {
 		cmd = exec.Command("iptables", "-D", "INPUT", "-s", ip, "-j", "DROP")
+	} else if config.BlockMode == "ipset" {
+		cmd = exec.Command("ipset", "del", "tblocker", ip)
 	} else {
 		cmd = exec.Command("ufw", "delete", "deny", "from", ip, "to", "any")
 	}
