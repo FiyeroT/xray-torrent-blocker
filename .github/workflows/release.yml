@@ -32,7 +32,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          files: myapp-linux-amd64  # Укажите путь к собранному файлу
+          files: tblocker-linux-amd64
 
       # Шаг 5: Опубликовать релиз
       - name: Publish Release
