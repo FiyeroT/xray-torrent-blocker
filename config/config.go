@@ -34,10 +34,12 @@ var (
 ➖➖➖➖➖➖➖➖➖
 <b>User tag :</b> #%s`
 
-	SendWebhook     bool
-	WebhookURL      string
-	WebhookTemplate string
-	StorageDir      string
+	SendWebhook      bool
+	WebhookURL       string
+	WebhookTemplate  string
+	WebhookHeader    string
+	WebhookHeaderVal string
+	StorageDir       string
 )
 
 var (
@@ -76,6 +78,8 @@ type Config struct {
 	SendWebhook         bool   `yaml:"SendWebhook"`
 	WebhookURL          string `yaml:"WebhookURL"`
 	WebhookTemplate     string `yaml:"WebhookTemplate"`
+	WebhookHeader       string `yaml:"WebhookHeader"`
+	WebhookHeaderVal    string `yaml:"WebhookHeaderVal"`
 	StorageDir          string `yaml:"StorageDir"`
 }
 
@@ -101,6 +105,8 @@ func LoadConfig(configPath string) error {
 	SendAdminMessage = cfg.SendAdminMessage
 	SendWebhook = cfg.SendWebhook
 	WebhookURL = cfg.WebhookURL
+	WebhookHeader = cfg.WebhookHeader
+	WebhookHeaderVal = cfg.WebhookHeaderVal
 
 	if cfg.UserMessageTemplate != "" {
 		Message = cfg.UserMessageTemplate
