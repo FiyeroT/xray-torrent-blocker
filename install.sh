@@ -29,6 +29,7 @@ URL="https://github.com/fiyerot/xray-torrent-blocker/releases/latest/download/tb
 
 mkdir -p /opt/tblocker
 wget -O /opt/tblocker/tblocker "$URL"
+chmod +x /opt/tblocker/tblocker
 
 CONFIG_PATH="/opt/tblocker/config.yaml"
 CONFIG_URL="https://raw.githubusercontent.com/fiyerot/xray-torrent-blocker/main/config.yaml.example"
