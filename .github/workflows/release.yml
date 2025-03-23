@@ -24,7 +24,7 @@ jobs:
       - name: Build the Go project
         run: |
           go mod tidy
-          GOOS=linux GOARCH=amd64 go build -o myapp-linux-amd64 ./main.go  # Замените на свой путь и название
+          GOOS=linux GOARCH=amd64 go build -o tblocker-linux-amd64 ./main.go
 
       # Шаг 4: Создание релиза на GitHub
       - name: Create GitHub release
