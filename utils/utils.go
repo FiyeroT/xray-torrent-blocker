@@ -236,6 +236,9 @@ func SendWebhook(username string, ip string, action string) {
 	}
 
 	req.Header.Set("Content-Type", "application/json")
+	if config.WebhookHeader != "" {
+		req.Header.Set(config.WebhookHeader, config.WebhookHeaderVal)
+	}
 
 	client := &http.Client{}
 	resp, err := client.Do(req)
