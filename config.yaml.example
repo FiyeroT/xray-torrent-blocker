@@ -20,7 +20,7 @@ BlockMode: "ipset"
 # Если false или не задан, сообщения администратору не будут отправляться.
 # Optional. Determines whether to send an admin message upon blocking.
 # If set to false or not specified, no admin messages will be sent.
-SendAdminMessage: true
+SendAdminMessage: false
 
 # Опциональный. Токен бота для отправки сообщений администратору через Telegram.
 # Обязательно, если включена опция SendAdminMessage.
