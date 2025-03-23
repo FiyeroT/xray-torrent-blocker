@@ -1,6 +1,6 @@
 module tblocker
 
-go 1.21
+go 1.20
 
 require (
 	github.com/hpcloud/tail v1.0.0
