@@ -1,40 +1,31 @@
-name: Build and Release Go Application
+name: Release
 
 on:
   push:
     tags:
-      - 'v*'  # Запускать при пуше тега, начинающегося с "v"
+      - "v*"
+
+permissions:
+  contents: write
 
 jobs:
-  build:
+  goreleaser:
     runs-on: ubuntu-latest
-
     steps:
-      # Шаг 1: Checkout репозитория
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Шаг 2: Установить Go
-      - name: Set up Go
-        uses: actions/setup-go@v3
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
         with:
-          go-version: '1.20'  # Задайте нужную версию Go
-
-      # Шаг 3: Сборка Go проекта
-      - name: Build the Go project
-        run: |
-          go mod tidy
-          GOOS=linux GOARCH=amd64 go build -o tblocker-linux-amd64 ./main.go
-
-      # Шаг 4: Создание релиза на GitHub
-      - name: Create GitHub release
-        uses: softprops/action-gh-release@v1
+          fetch-depth: 0
+      - name: Setup Go Environment
+        uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Run GoReleaser
+        uses: goreleaser/goreleaser-action@v6
+        with:
+          version: latest
+          args: release --clean
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          files: tblocker-linux-amd64
-
-      # Шаг 5: Опубликовать релиз
-      - name: Publish Release
-        run: |
-          echo "Release created and uploaded successfully."
+          GITHUB_REPOSITORY_OWNER: ${{ github.repository_owner }}
+          GITHUB_REPOSITORY_NAME: ${{ github.event.repository.name }}
