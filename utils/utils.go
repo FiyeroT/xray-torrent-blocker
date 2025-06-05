@@ -224,7 +224,7 @@ func UnblockIPAfterDelay(ip string, delay time.Duration, username string) {
 	}
 }
 
-func SendWebhook(username string, ip string, action string, ip_dsp string) {
+func SendWebhook(username string, ip string, action string, ip_dst string) {
 	if !config.SendWebhook || config.WebhookURL == "" {
 		return
 	}
