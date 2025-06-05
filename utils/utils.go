@@ -39,7 +39,16 @@ func StartLogMonitor() {
 }
 
 func handleLogEntry(line string) {
-	ip := config.IpRegex.FindString(line)
+	ips := config.IpRegex.FindAllString(line, -1)
+	if len(ips) < 1 {
+		return
+	}
+	ip := ips[0]
+	ip_dst := ""
+	if len(ips) >= 2 {
+		ip_dst = ips[1]
+	}
+	
 	var tid []string
 	var username []string
 
@@ -78,7 +87,7 @@ func handleLogEntry(line string) {
 	log.Printf("User %s with IP: %s blocked for %d minutes\n", username[1], ip, config.BlockDuration)
 
 	if config.SendWebhook {
-		go SendWebhook(username[1], ip, "block")
+		go SendWebhook(username[1], ip, "block", ip_dst)
 	}
 
 	go UnblockIPAfterDelay(ip, time.Duration(config.BlockDuration)*time.Minute, username[1])
@@ -206,7 +215,7 @@ func UnblockIPAfterDelay(ip string, delay time.Duration, username string) {
 	log.Printf("User %s with IP: %s has been unblocked\n", username, ip)
 
 	if config.SendWebhook {
-		go SendWebhook(username, ip, "unblock")
+		go SendWebhook(username, ip, "unblock", "")
 	}
 
 	if config.SendAdminMessage {
@@ -215,7 +224,7 @@ func UnblockIPAfterDelay(ip string, delay time.Duration, username string) {
 	}
 }
 
-func SendWebhook(username string, ip string, action string) {
+func SendWebhook(username string, ip string, action string, ip_dsp string) {
 	if !config.SendWebhook || config.WebhookURL == "" {
 		return
 	}
@@ -227,6 +236,7 @@ func SendWebhook(username string, ip string, action string) {
 		config.Hostname,
 		action,
 		time.Now().Format(time.RFC3339),
+		ip_dst,
 	)
 
 	req, err := http.NewRequest("POST", config.WebhookURL, strings.NewReader(payload))
